@@ -14,11 +14,13 @@ class SignInUserView extends GetView<SignInUserController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Sign In"),
+        centerTitle: true,
         bottom: TabBar(
           controller: controller.tabController,
           tabs: const [
-            Text("Sign In Mobile No."),
-            Text("Sign In Username"),
+            Text("Mobile No."),
+            Text("Username"),
           ],
         ),
       ),

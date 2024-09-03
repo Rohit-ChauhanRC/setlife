@@ -28,23 +28,19 @@ class SignInUser extends GetView<SignInUserController> {
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
-            // Container(
-            //   margin: const EdgeInsets.only(
-            //     top: 100,
-            //   ),
-            //   // height: ScreenUtil().screenHeight / 8,
-            //   // width: ScreenUtil().screenWidth / 1.5,
-            //   child: Image.asset(
-            //     "assets/images/logo.jpg",
-            //     height: 200,
-            //     width: 200,
-            //     // color: AppColor.kLogoColor,
-            //   ),
-            // ),
+            const SizedBox(
+              height: 20,
+            ),
+            Image.asset(
+              "assets/images/setlife.png",
+              height: 150,
+              width: 200,
+              // color: AppColor.kLogoColor,
+            ),
             SingleChildScrollView(
               child: Container(
                 margin: const EdgeInsets.only(
-                  top: 50,
+                  top: 20,
                   left: 20,
                   right: 20,
                 ),
