@@ -95,32 +95,16 @@ class HomeController extends GetxController {
               }
             },
           );
-
-    // IsolateNameServer.registerPortWithName(
-    //     _port.sendPort, 'downloader_send_port');
-    // _port.listen((dynamic data) {
-    //   String id = data[0];
-    //   DownloadTaskStatus status = data;
-
-    //   if (status == DownloadTaskStatus.complete) {
-    //     ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
-    //       content: Text("Download $id completed!"),
-    //     ));
-    //   }
-    // });
-    // FlutterDownloader.registerCallback(downloadCallback);
   }
 
   @override
   void onReady() {
     super.onReady();
-    print("cookies : ${box.read('cookies')}");
   }
 
   @override
   void onClose() {
     super.onClose();
-    IsolateNameServer.removePortNameMapping('downloader_send_port');
   }
 
   saveCookies(WebUri url) async {
@@ -139,7 +123,7 @@ class HomeController extends GetxController {
       final name = nameValue[0];
       final value = nameValue[1];
       await cookieManager.setCookie(
-        url: WebUri.uri(Uri.parse("http://app.maklife.in:8016/index.php")),
+        url: WebUri.uri(Uri.parse("http://app.maklife.in:8014/index.php")),
         name: name,
         value: value,
         domain: 'app.maklife',
@@ -148,13 +132,6 @@ class HomeController extends GetxController {
         sameSite: HTTPCookieSameSitePolicy.NONE,
       );
     }
-  }
-
-  @pragma('vm:entry-point')
-  static void downloadCallback(String id, int status, int progress) {
-    final SendPort send =
-        IsolateNameServer.lookupPortByName('downloader_send_port')!;
-    send.send([id, status, progress]);
   }
 
   void handleClick(WebUri url) async {

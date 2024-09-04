@@ -14,17 +14,9 @@ class SignInUser extends GetView<SignInUserController> {
   Widget build(BuildContext context) {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      body: Container(
+      body: SizedBox(
         height: Get.height,
         width: Get.width,
-        // decoration: const BoxDecoration(
-        //   image: DecorationImage(
-        //     image: AssetImage(
-        //       "assets/images/bg3.jpg",
-        //     ),
-        //     fit: BoxFit.cover,
-        //   ),
-        // ),
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
@@ -60,10 +52,10 @@ class SignInUser extends GetView<SignInUserController> {
                           keyboardType: TextInputType.text,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           onChanged: (val) {
-                            controller.mobileNumber = val;
+                            controller.username = val;
                           },
                           decoration: InputDecoration(
-                            label: const Text("Please enter username"),
+                            label: const Text("Please enter userid"),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(
@@ -96,7 +88,7 @@ class SignInUser extends GetView<SignInUserController> {
                           keyboardType: TextInputType.text,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           onChanged: (val) {
-                            controller.mobileNumber = val;
+                            controller.password = val;
                           },
                           decoration: InputDecoration(
                             label: const Text("Please enter password"),
@@ -151,7 +143,7 @@ class SignInUser extends GetView<SignInUserController> {
                                   // Get.toNamed(Routes.OTP);
 
                                   if (controller.agreeCheck) {
-                                    await controller.login();
+                                    await controller.loginWithUserPassword();
                                   }
                                   // Get.toNamed(Routes.HOME);
                                 },

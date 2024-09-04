@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -6,15 +7,12 @@ import 'package:setlife/app/constants/constants.dart';
 import 'package:setlife/app/routes/app_pages.dart';
 import 'package:setlife/app/utils/utils.dart';
 
-import '../../../data/dio_client.dart';
-import '../../../data/models/send_otp_model.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
 
 class OtpController extends GetxController {
   //
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-
-  final DioClient client = DioClient();
 
   final box = GetStorage();
 
@@ -75,44 +73,69 @@ class OtpController extends GetxController {
 
   Future<dynamic> resendOtp() async {
     Utils.closeKeyboard();
-    // if (!loginFormKey!.currentState!.validate()) {
-    //   return null;
-    // }
-    SendOtpModel? sendOtpModel = SendOtpModel(status: "", message: "");
+    // otp/ValidateOtpusers
 
-    await client.postApi(endPointApi: Constants.sendOtp, data: {
-      "MobileNo": mobileNumber,
-    }).then((value) => sendOtpModel = value!);
+    try {
+      var res = await http.post(
+        Uri.parse("http://app.maklife.in:8084/api/otp/ValidateOtpusers"),
+        body: {
+          "MobileNo": mobileNumber.toString(),
+        },
+      );
+
+      if (res.statusCode == 200 &&
+          jsonDecode(res.body) == "OTP has been send to your mobile No !") {
+        circularProgress = true;
+
+        Get.toNamed(Routes.OTP, arguments: mobileNumber);
+      } else {
+        Utils.showDialog(json.decode(res.body));
+      }
+      circularProgress = true;
+    } catch (e) {
+      circularProgress = true;
+      Utils.showDialog(e.toString());
+    }
+    circularProgress = true;
     count = 0;
     resend = false;
-    circularProgress = true;
     await counter();
   }
 
   Future<dynamic> otpVerify() async {
+    // otp/OTPValidation
     Utils.closeKeyboard();
     if (!loginFormKey!.currentState!.validate()) {
       return null;
     }
-    SendOtpModel? sendOtpModel = SendOtpModel(status: "", message: "");
-    circularProgress = false;
 
-    await client.postApi(endPointApi: Constants.verifyOtp, data: {
-      "MobileNo": mobileNumber,
-      "OtpNo": otp
-    }).then((value) => sendOtpModel = value!);
-
-    debugPrint(sendOtpModel!.status.toString());
-    if (sendOtpModel!.status == "200") {
-      circularProgress = true;
-      box.write(Constants.cred, mobileNumber);
-      Get.offAllNamed(
-        Routes.HOME,
-        arguments: mobileNumber,
+    try {
+      var res = await http.post(
+        Uri.parse("http://app.maklife.in:8084/api/otp/OTPValidation"),
+        body: {
+          "MobileNo": mobileNumber,
+          "OtpNo": otp,
+        },
       );
-    } else {
+      // "Login success !"
+      if (res.statusCode == 200) {
+        circularProgress = true;
+
+        Get.toNamed(Routes.HOME, arguments: mobileNumber);
+      } else {
+        Utils.showDialog(json.decode(res.body));
+      }
       circularProgress = true;
-      Utils.showDialog(Constants.error);
+    } catch (e) {
+      circularProgress = true;
+      Utils.showDialog(e.toString());
     }
+
+    circularProgress = true;
+    box.write(Constants.cred, mobileNumber);
+    Get.offAllNamed(
+      Routes.HOME,
+      arguments: mobileNumber,
+    );
   }
 }

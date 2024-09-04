@@ -1,11 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:setlife/app/constants/constants.dart';
-import 'package:setlife/app/data/dio_client.dart';
-import 'package:setlife/app/data/models/send_otp_model.dart';
 import 'package:setlife/app/routes/app_pages.dart';
 import 'package:setlife/app/utils/utils.dart';
+import 'package:http/http.dart' as http;
 
 class SignInUserController extends GetxController
     with GetTickerProviderStateMixin {
@@ -14,13 +15,19 @@ class SignInUserController extends GetxController
   GlobalKey<FormState>? loginFormKey = GlobalKey<FormState>();
   GlobalKey<FormState>? userFormKey = GlobalKey<FormState>();
 
-  final DioClient client = DioClient();
-
   final box = GetStorage();
 
   final RxString _mobileNumber = ''.obs;
   String get mobileNumber => _mobileNumber.value;
-  set mobileNumber(String mobileNumber) => _mobileNumber.value = mobileNumber;
+  set mobileNumber(String str) => _mobileNumber.value = str;
+
+  final RxString _username = ''.obs;
+  String get username => _username.value;
+  set username(String str) => _username.value = str;
+
+  final RxString _password = ''.obs;
+  String get password => _password.value;
+  set password(String str) => _password.value = str;
 
   final RxBool _circularProgress = true.obs;
   bool get circularProgress => _circularProgress.value;
@@ -53,19 +60,11 @@ class SignInUserController extends GetxController
     _circularProgress.close();
   }
 
-  checkLoginOrNot() async {
-    // if (await box.read(Constants.cred) != null {
-    //   Get.toNamed(Routes.HOME, arguments: box.read(Constants.cred));
-    // }
-    debugPrint("${box.read(Constants.cred)}");
-  }
-
   Future<dynamic> login() async {
     Utils.closeKeyboard();
     if (!loginFormKey!.currentState!.validate()) {
       return null;
     }
-    SendOtpModel? sendOtpModel;
 
     circularProgress = false;
     if (mobileNumber == "1234567890" ||
@@ -74,19 +73,62 @@ class SignInUserController extends GetxController
         mobileNumber == "9898989898") {
       Get.toNamed(Routes.HOME, arguments: mobileNumber);
     } else {
-      await client.postApi(endPointApi: Constants.sendOtp, data: {
-        "MobileNo": mobileNumber,
-      }).then((value) => sendOtpModel = value!);
+      try {
+        var res = await http.post(
+          Uri.parse("http://app.maklife.in:8084/api/otp/ValidateOtpusers"),
+          body: {
+            "MobileNo": mobileNumber.toString(),
+          },
+        );
 
-      debugPrint(sendOtpModel!.status.toString());
-      if (sendOtpModel!.status == "200") {
-        circularProgress = true;
+        if (res.statusCode == 200 &&
+            jsonDecode(res.body) == "OTP has been send to your mobile No !") {
+          circularProgress = true;
 
-        Get.toNamed(Routes.OTP, arguments: mobileNumber);
-      } else {
+          Get.toNamed(Routes.OTP, arguments: mobileNumber);
+        } else {
+          Utils.showDialog(json.decode(res.body));
+        }
         circularProgress = true;
-        Utils.showDialog(Constants.error);
+      } catch (e) {
+        circularProgress = true;
+        Utils.showDialog(e.toString());
       }
+      circularProgress = true;
     }
+  }
+
+  Future<dynamic> loginWithUserPassword() async {
+    Utils.closeKeyboard();
+    if (!userFormKey!.currentState!.validate()) {
+      return null;
+    }
+
+    circularProgress = false;
+
+    try {
+      var res = await http.post(
+        Uri.parse(
+            "http://app.maklife.in:8014/index.php/Api/User_Check?User_Id=$username&Password=$password"),
+      );
+
+      var a = jsonDecode(res.body);
+
+      if (res.statusCode == 200 && a["Status"] == "True") {
+        circularProgress = true;
+        box.write(Constants.cred, a["Mobile"]);
+
+        Get.offAllNamed(Routes.HOME, arguments: jsonDecode(res.body)["Mobile"]);
+      } else if (res.statusCode == 200 && a["Status"] == "False") {
+        Utils.showDialog(
+            json.decode("Please enter valid userid and password!"));
+      }
+      circularProgress = true;
+    } catch (e) {
+      circularProgress = true;
+      // Utils.showDialog(e.toString());
+      // Utils.showDialog(json.decode("Please enter valid userid and password!"));
+    }
+    circularProgress = true;
   }
 }

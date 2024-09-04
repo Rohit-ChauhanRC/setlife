@@ -14,17 +14,9 @@ class SignInMobile extends GetView<SignInUserController> {
   Widget build(BuildContext context) {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      body: Container(
+      body: SizedBox(
         height: Get.height,
         width: Get.width,
-        // decoration: const BoxDecoration(
-        //   image: DecorationImage(
-        //     image: AssetImage(
-        //       "assets/images/bg3.jpg",
-        //     ),
-        //     fit: BoxFit.cover,
-        //   ),
-        // ),
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
@@ -57,9 +49,10 @@ class SignInMobile extends GetView<SignInUserController> {
                           validator: (value) => value!.length < 10
                               ? "Please enter valid mobile no."
                               : null,
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.phone,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(10),
                           ],
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           onChanged: (val) {

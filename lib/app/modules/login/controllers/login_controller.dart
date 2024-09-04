@@ -12,8 +12,6 @@ class LoginController extends GetxController {
   //
   GlobalKey<FormState>? loginFormKey = GlobalKey<FormState>();
 
-  final DioClient client = DioClient();
-
   final box = GetStorage();
 
   final RxString _mobileNumber = ''.obs;
@@ -67,9 +65,9 @@ class LoginController extends GetxController {
         mobileNumber == "9898989898") {
       Get.toNamed(Routes.HOME, arguments: mobileNumber);
     } else {
-      await client.postApi(endPointApi: Constants.sendOtp, data: {
-        "MobileNo": mobileNumber,
-      }).then((value) => sendOtpModel = value!);
+      // await client.postApi(endPointApi: Constants.sendOtp, data: {
+      //   "MobileNo": mobileNumber,
+      // }).then((value) => sendOtpModel = value!);
 
       debugPrint(sendOtpModel!.status.toString());
       if (sendOtpModel!.status == "200") {

@@ -12,17 +12,9 @@ class OtpView extends GetView<OtpController> {
   Widget build(BuildContext context) {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      body: Container(
+      body: SizedBox(
         height: Get.height,
         width: Get.width,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              "assets/images/bg3.jpg",
-            ),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
@@ -31,7 +23,7 @@ class OtpView extends GetView<OtpController> {
                 top: 100,
               ),
               child: Image.asset(
-                "assets/images/logo.jpg",
+                "assets/images/setlife.png",
                 height: 200,
                 width: 200,
               ),

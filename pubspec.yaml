@@ -11,7 +11,6 @@ dependencies:
     sdk: flutter
   get: 4.6.6
   permission_handler:
-  dio: ^5.4.0
   get_storage: ^2.1.1
   flutter_inappwebview: ^6.0.0
   url_launcher: ^6.2.2
@@ -19,6 +18,7 @@ dependencies:
   path_provider: ^2.1.1
   upgrader: ^9.0.0
   open_filex: ^4.4.0
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0

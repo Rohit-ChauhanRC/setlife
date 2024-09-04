@@ -25,10 +25,11 @@ class HomeView extends GetView<HomeController> {
               InAppWebView(
                 pullToRefreshController: controller.pullToRefreshController,
                 key: controller.webViewKey,
-                initialUrlRequest:
-                    URLRequest(url: WebUri("http://app.maklife.in:8014")),
-                // url: WebUri(
-                //     "http://app.maklife.in:8092/index.php/login/${"Check_Login/${controller.mobileNumber}"}")),
+                initialUrlRequest: URLRequest(
+                  url: WebUri(
+                    "http://app.maklife.in:8014/index.php/login/${"Check_Login/${controller.mobileNumber}"}",
+                  ),
+                ),
                 initialSettings: controller.settings,
                 onWebViewCreated: (cx) {
                   controller.webViewController = cx;

@@ -12,8 +12,8 @@ class Constants {
   static const String error = "Something went wrong!";
   static const String success = "Success";
 
-  static const String appName = "Gurdaspur Milk Farmer App";
-  static const String appbarTitle = "Gurdaspur Milk Farmer App";
+  static const String appName = "Setlife";
+  static const String appbarTitle = "Setlife";
   static const String companyInfo = "Company Info";
   static const String aboutUs = "About Us";
   static const String legal = "Legal";
@@ -199,7 +199,8 @@ class Constants {
   static const String accountNumber = "Account Number";
   static const String welMak = "Welcome to Our Mak Life Dairy";
 
-  static const String baseUrl = "http://payment.maklife.in:8084/api/";
+  static const String baseUrl = "http://app.maklife.in:8014/api/";
+  static const String baseUrl2 = "http://app.maklife.in:8014/";
   static const String sendOtp = "otp/ValidateOtpusers";
   static const String verifyOtp = "otp/OTPValidation";
   static const String cred = "mobile_no";
