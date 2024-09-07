@@ -22,15 +22,28 @@ def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
-
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 android {
     namespace = "setlife.web.setlife_app"
     compileSdk = 34
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = '25.1.8937393'
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    signingConfigs {
+        release {
+            keyAlias = keystorePropertiesFile
+            keyPassword = keystorePropertiesFile
+            storeFile keystorePropertiesFile
+            storePassword = keystorePropertiesFile
+        }
     }
 
     defaultConfig {
@@ -39,18 +52,23 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = 21
-        targetSdk = 34
+        targetSdk 35
         versionCode = 9
         versionName = "9.0"
+        signingConfig signingConfigs.release
+        multiDexEnabled true
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            // signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
+
         }
     }
+    buildToolsVersion '34.0.0'
 }
 
 flutter {

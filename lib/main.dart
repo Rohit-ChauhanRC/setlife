@@ -39,3 +39,4 @@ class App extends StatelessWidget {
     );
   }
 }
+// keytool -importcert -file /Users/user/Downloads/deployment_cert.der -keystore /Users/user/Documents/Projects/setlife/setlife/android/setlife.jks
